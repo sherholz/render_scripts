@@ -1,0 +1,9 @@
+<scene version="0.5.0">
+	<default name="maxDepth" value="-1"/>
+	<default name="rrDepth" value="8"/>
+	
+	<integrator type="bdpt">
+		<integer name="maxDepth" value="$maxDepth"/>
+   	    <integer name="rrDepth" value="$rrDepth"/>
+	</integrator>
+</scene>	

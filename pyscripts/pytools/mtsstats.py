@@ -1,0 +1,11 @@
+mtsStats ={}
+mtsStats["spp"] = 0.0
+mtsStats["renderTime"] = 0.0
+mtsStats["adrrsCameraRays"] = 0.0
+mtsStats["avgPathLength"] = 0.0
+mtsStats["pathCount"] = 0.0
+mtsStats["pathSegment"] = 0.0
+mtsStats["adrrsPathKilled"] = 0.0
+mtsStats["adrrsPathSplit"] = 0.0
+mtsStats["adrrsPathRRDist"] = 0.0
+mtsStats["adrrsPathSplitDist"] = 0.0

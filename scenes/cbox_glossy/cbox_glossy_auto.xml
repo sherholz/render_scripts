@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='utf-8'?>
+
+<scene version="0.5.0">
+
+   <default name="__INTEGRATOR__" value="path" />
+  <include filename="../integrators/$__INTEGRATOR__.xml"/>
+  <default name="sampleCount" value="128"/>
+
+	<sensor type="perspective">
+		<float name="farClip" value="2800"/>
+		<float name="focusDistance" value="1000"/>
+		<float name="fov" value="39.3077"/>
+		<string name="fovAxis" value="x"/>
+		<float name="nearClip" value="10"/>
+		<transform name="toWorld">
+
+			<lookat target="278, 273, -799" origin="278, 273, -800" up="0, 1, 0"/>
+		</transform>
+
+		<sampler type="independent">
+			<integer name="sampleCount" value="32"/>
+		</sampler>
+
+		<film type="hdrfilm">
+			<integer name="height" value="512"/>
+			<string name="label[10,10]" value="Integrator:$integrator['type'], $film['width']x$film['height'], rendertime:$scene['renderTime'], memory:$scene['memUsage']"/>
+			<integer name="width" value="512"/>
+
+			
+			<boolean name="attachLog" value="false"/>
+			<string name="fileFormat" value="openexr"/>
+			<rfilter type="box"/>
+			<boolean name="banner" value="false"/>
+		</film>
+	</sensor>
+
+	
+	<include filename="./cbox_glossy_scene.xml"/>
+	
+	
+</scene>

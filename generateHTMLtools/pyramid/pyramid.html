@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">   
+    <head>      
+        <title>Pyramid template</title>      
+        <meta http-equiv="content-Type" content="text/html; charset=utf-8" />            
+        <style>
+        figure 
+        {
+            display:table;
+            border: 1px solid red;
+            float:left;
+            margin:0px;
+        }
+        br
+        {
+        clear:both;
+        }
+        .colorspan
+        {
+          background: linear-gradient(to right, #FF0000,#0000FF,#00FF00);
+          
+        }
+        /*.alignleft {
+        	float: left;
+        }  */
+        .alignright {
+        	float: right;
+        }
+        .vertical {
+           transform: rotate(90deg);
+	         transform-origin: left top 20;
+        } 
+        </style>  
+    </head>   
+    <body>
+  
+		    <div id="images" style="white-space: nowrap;">
+        </div>
+    
+        <script>
+        
+          var ups = true;
+          var minL = 1;
+          var maxL = 4;
+          var scene_name = "kitchen";
+          var displayImages = false;
+          
+          // CODE
+          function show_image(src, alt, div, useFig) {
+              var img = document.createElement("img");
+              img.src = src;
+              //img.width = width;
+              //img.height = height;
+              img.alt = alt;
+              //img.style.position="absolute";
+              //img.style.top=posY + "px";
+              //img.style.left=posX +"px";
+          
+              // This next line will just add it to the <body> tag
+              
+              
+              div.appendChild(img);
+          }
+          
+          function displayOneImage(prefix,type,l,s,t,technique, techName, div)
+          {
+                
+                var imagename = prefix + "_" + type +  "_L" + l + "_S" + s + "_T" + t + "_" + technique + ".png";
+                show_image(imagename, "L = " + l + " S = " + s + " T = " + t + " " + techName, div);
+          }
+          
+          function displayTd(prefix,l,s,t,technique, div)
+          {
+            var techName = technique == "B" ? "CONNECTION" : "MERGING";
+            var caption = "S = " + s + " T = " + t + " " + techName;
+            var fig = document.createElement("figure");
+            var figCaption = document.createElement("figcaption");       
+            figCaption.innerHTML = caption;
+            figCaption.style.textAlign = "center";
+            fig.appendChild(figCaption);
+            var span = document.createElement("div");
+            span.className = "colorspan";
+            span.innerHTML = "SAMPLES";
+            var spanRight = document.createElement("span");
+            spanRight.className = "alignright";
+            spanRight.innerHTML = "WEIGHT"; 
+            span.appendChild(spanRight);
+            fig.appendChild(span);
+            if (displayImages)
+              displayOneImage(prefix,"image",l,s,t,technique, techName, fig);
+            displayOneImage(prefix,"ratio",l,s,t,technique, techName, fig);
+            div.appendChild(fig);
+                
+            
+          }
+          
+          function displayRow(scene_name,L,ups,table) {
+            var tr = document.createElement("tr");
+            table.appendChild(tr);
+            var maxT = ups ? L * 2 : L + 1;
+            for (var T = 0; T < maxT; ++T ) {
+              var td = document.createElement("td");
+              td.innerHTML = "<h2>" + L + "</h2>";
+              tr.appendChild(td);
+              td = document.createElement("td");
+              tr.appendChild(td);
+              var merge = T > 0 && T % 2 == 0;
+              var t = Math.floor((T + 3) / 2);
+              if (merge)
+                displayTd(scene_name,L,L + 2 - t,t,"M",td);
+              else
+                displayTd(scene_name,L,L + 1 - t,t,"B",td);
+            }
+          }
+          var table = document.createElement("table");
+          document.body.appendChild(table);
+        
+          for (var L = minL; L <= maxL; ++L) {
+            displayRow(scene_name,L,ups,table);
+            
+          }
+        
+        
+        
+    
+        </script>
+    </body>
+</html>
