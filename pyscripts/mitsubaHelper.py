@@ -71,7 +71,10 @@ class MitsubaHelper:
 
     def getIntegrator(self):
         return self.getParam("__INTEGRATOR__")
-
+    
+    def getScenesFolder(self):
+	return self.scenesFolder
+    
     def setScene(self, scene):
         self.params = {}
         self.scene = scene

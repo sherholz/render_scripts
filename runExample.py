@@ -20,12 +20,16 @@ tc = TestCase(mtsConfig, prefix)
 
 tc.loadTestCases(testCasesFile)
 
+#sets the scene used for the test
+tc.setScene(scene)
 #example to run all testcases
-tc.runAllTestCases(scene)
+tc.runAllTestCases(copyRef = True)
 
 #example run a single test case
-#tc.runTestCase(scene, "vol")
+#tc.runTestCase("vol")
+# copies the reference file to the result folder
+#tc.copyRefenrence()
 
 #generates the HTML comparision files
 htmlGenerator = HTMLGenerator(mtsConfig, testCasesFile, prefix)
-htmlGenerator.generateAll(True)
+htmlGenerator.generateAll(True,False)
