@@ -10,6 +10,7 @@ class TestCase:
     """ Test case class for runing test cases with the mitsuba scripts.
 
     """
+
     def __init__(self, mitsuba_config, prefix):
         """ Constructor for the TestCase class. It loads a mitsuba config and sets up
         the MitsubaHelper class instance.
@@ -28,13 +29,12 @@ class TestCase:
         mcMod = importlib.import_module(os.path.basename(mitsuba_config))
         self.config = mcMod.MitsubaConfig()
 
-	# loade scene info
-	scene_path = self.config.scene_path
-        #adds the scene folder to the path and loads the scene information data
-        sys.path.append(os.path.dirname(scene_path+"/scenes"))
-        sceneMod = importlib.import_module(os.path.basename(scene_path+"/scenes"))
+        # loade scene info
+        scene_path = self.config.scene_path
+        # adds the scene folder to the path and loads the scene information data
+        sys.path.append(os.path.dirname(scene_path + "/scenes"))
+        sceneMod = importlib.import_module(os.path.basename(scene_path + "/scenes"))
         self.scene_data = sceneMod.scenes
-
 
         # sets up the MitsubaHelper
         self.mitsuba = MitsubaHelper(self.config.mitsuba_path,
@@ -44,10 +44,9 @@ class TestCase:
         self.prefix = prefix
 
     def getSceneInfos(self):
-	return self.scene_data
+        return self.scene_data
 
-
-    def loadTestCases(self, testCase, script_params = {}):
+    def loadTestCases(self, testCase, script_params={}):
         """ Lodes the test case file and extracts the common parameters and
         the test case parameters.
 
@@ -58,27 +57,26 @@ class TestCase:
         tc = importlib.import_module(os.path.basename(testCase))
         self.common_params = tc.common_params
         self.test_cases = tc.test_cases
-	self.description = tc.test_case_description
+        self.description = tc.test_case_description
 
-	for key in script_params:
-		self.common_params[key] = script_params[key]	
-	
-	
-	self.mitsuba.setOutputFolder(self.prefix)
+        for key in script_params:
+            self.common_params[key] = script_params[key]
 
-	testFolder = self.mitsuba.getOutputFolder()
-	# generates the folder if it does not exits	
-	if not os.path.exists(testFolder):
-		os.makedirs(testFolder)
-	
-	#store test case infos
-	tInfo = {}
-	tInfo["description"] = self.description
-	
-	with open(testFolder + '/test_info.json', 'w') as fp:
-    		json.dump(tInfo, fp, indent = True)
+        self.mitsuba.setOutputFolder(self.prefix)
 
-    def runTestCase(self,tcName, preProcess=False):
+        testFolder = self.mitsuba.getOutputFolder()
+        # generates the folder if it does not exits
+        if not os.path.exists(testFolder):
+            os.makedirs(testFolder)
+
+        # store test case infos
+        tInfo = {}
+        tInfo["description"] = self.description
+
+        with open(testFolder + '/test_info.json', 'w') as fp:
+            json.dump(tInfo, fp, indent=True)
+
+    def runTestCase(self, tcName, preProcess=False):
         """ Runs a given test case from the test case list for a specific scene.
         The test case is specified by its name.
 
@@ -111,89 +109,84 @@ class TestCase:
                 self.mitsuba.setParam(tcparam, tcparams[tcparam])
 
         # sets the output folder for the results
-        #self.mitsuba.setOutputFolder(self.prefix + "/" + scene + "/" + self.mitsuba.getIntegrator() + " " + tcName)
+        # self.mitsuba.setOutputFolder(self.prefix + "/" + scene + "/" + self.mitsuba.getIntegrator() + " " + tcName)
 
-	self.mitsuba.setOutputFolder(self.prefix + "/" + self.m_scene + "/" + tcName)
+        self.mitsuba.setOutputFolder(self.prefix + "/" + self.m_scene + "/" + tcName)
 
-	testCaseFolder = self.mitsuba.getOutputFolder()
-	# generates the folder if it does not exits	
-	if not os.path.exists(testCaseFolder):
-		os.makedirs(testCaseFolder)
-	
-	#store test case infos
-	tcInfo = {}
-	tcInfo["tcName"] = tcName
-	tcInfo["description"] = tc["description"]
-	
-	with open(testCaseFolder + '/test_case_info.json', 'w') as fp:
-    		json.dump(tcInfo, fp, indent = True)
+        testCaseFolder = self.mitsuba.getOutputFolder()
+        # generates the folder if it does not exits
+        if not os.path.exists(testCaseFolder):
+            os.makedirs(testCaseFolder)
 
-	
+        # store test case infos
+        tcInfo = {}
+        tcInfo["tcName"] = tcName
+        tcInfo["description"] = tc["description"]
+
+        with open(testCaseFolder + '/test_case_info.json', 'w') as fp:
+            json.dump(tcInfo, fp, indent=True)
 
         # starts the test case
         self.mitsuba.run()
-		
+
         if preProcess:
-			path = self.mitsuba.getOutputFolder()
-			if os.path.exists(path):
-				# remove if exists
-				shutil.rmtree(path)
-			else:
-				print path, " does not exists" 
-    
+            path = self.mitsuba.getOutputFolder()
+            if os.path.exists(path):
+                # remove if exists
+                shutil.rmtree(path)
+            else:
+                print path, " does not exists"
+
     def setScene(self, scene):
-	self.m_scene = scene
-    	
-	
-	sData = self.scene_data[scene]	
-	sceneInfo = {}
-	sceneInfo["name"] = scene
-	sceneInfo["beautyName"] = sData["beauty name"]
-	sceneInfo["exp"] = sData["exp"]
-	sceneInfo["diffexp"] = sData["diffexp"]
-	sceneInfo["insets"] = sData["insets"]
+        self.m_scene = scene
 
-	self.mitsuba.setOutputFolder(self.prefix + "/" + self.m_scene)
-	sceneFolder = self.mitsuba.getOutputFolder()
+        sData = self.scene_data[scene]
+        sceneInfo = {}
+        sceneInfo["name"] = scene
+        sceneInfo["beautyName"] = sData["beauty name"]
+        sceneInfo["exp"] = sData["exp"]
+        sceneInfo["diffexp"] = sData["diffexp"]
+        sceneInfo["insets"] = sData["insets"]
 
-	# generates the folder if it does not exits	
-	if not os.path.exists(sceneFolder):
-		os.makedirs(sceneFolder)
+        self.mitsuba.setOutputFolder(self.prefix + "/" + self.m_scene)
+        sceneFolder = self.mitsuba.getOutputFolder()
 
-	with open(sceneFolder + '/scene_info.json', 'w') as fp:
-    		json.dump(sceneInfo, fp, indent = True)
-    
-    def copyRefenrence(self):
-	sData = self.scene_data[self.m_scene]	
-	sFolder = sData["dir"]
-	sRef = sData["ref"]
+        # generates the folder if it does not exits
+        if not os.path.exists(sceneFolder):
+            os.makedirs(sceneFolder)
 
-	sceneFolder = self.mitsuba.getScenesFolder()+"/"+sFolder+"/"	
+        with open(sceneFolder + '/scene_info.json', 'w') as fp:
+            json.dump(sceneInfo, fp, indent=True)
 
-	self.mitsuba.setOutputFolder(self.prefix + "/" + self.m_scene+ "/"+ "ref")
-	refOutFolder = self.mitsuba.getOutputFolder()	
-	
-	# generates the folder if it does not exits	
-	if not os.path.exists(refOutFolder):
-		os.makedirs(refOutFolder)
-	
-	self.mitsuba.safeCopy(sceneFolder+sRef+".exr", refOutFolder+"/"+self.m_scene+ "_auto.exr")
+    def copyReference(self):
+        sData = self.scene_data[self.m_scene]
+        sFolder = sData["dir"]
+        sRef = sData["ref"]
 
+        sceneFolder = self.mitsuba.getScenesFolder() + "/" + sFolder + "/"
 
-	tcInfo = {}
-	tcInfo["tcName"] = "ref"
-	tcInfo["description"] = "Reference"
-	
-	with open(sceneFolder + '/test_case_info.json', 'w') as fp:
-    		json.dump(tcInfo, fp, indent = True)
+        self.mitsuba.setOutputFolder(self.prefix + "/" + self.m_scene + "/" + "ref")
+        refOutFolder = self.mitsuba.getOutputFolder()
 
+        # generates the folder if it does not exits
+        if not os.path.exists(refOutFolder):
+            os.makedirs(refOutFolder)
 
-    def runAllTestCases(self, runRef = True, copyRef = False):
+        self.mitsuba.safeCopy(sceneFolder + sRef + ".exr", refOutFolder + "/" + self.m_scene + "_auto.exr")
+
+        tcInfo = {}
+        tcInfo["tcName"] = "ref"
+        tcInfo["description"] = "Reference"
+
+        with open(sceneFolder + '/test_case_info.json', 'w') as fp:
+            json.dump(tcInfo, fp, indent=True)
+
+    def runAllTestCases(self, runRef=True, copyRef=False):
         """ Runs all test cases of the test case list for a specific scene.
 
         :param scene: the name of scene the test cases are run for
         """
-	
+
         for tc in self.test_cases:
             print tc
             if tc != "ref":
@@ -202,8 +195,8 @@ class TestCase:
                 if runRef:
                     self.runTestCase(tc)
 
-	if copyRef:
-		self.copyReference()
+        if copyRef:
+            self.copyReference()
 
     def runTestCaseByIdx(self, idx):
         pass
@@ -224,14 +217,15 @@ class TestCase:
             self.nCores = -1
 
         self.mitsuba.setNumCores(self.nCores)
+
     def getConfig(self):
-	print self.config
-	return self.config
+        print self.config
+        return self.config
 
 
 if __name__ == '__main__':
     print "test for the TestCase"
-    tc = TestCase("example/example_mitsuba_config","tc")
+    tc = TestCase("example/example_mitsuba_config", "tc")
     tc.loadTestCases("example/example_test_case")
     tc.runTestCase('cbox_glossy', 'vol')
     tc.runAllTestCases('cbox_glossy')
